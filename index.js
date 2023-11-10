@@ -121,19 +121,21 @@ async function ChangeDealStatusHandler(req, res) {
     try {
         const { userId } = req.query;
 
-        // Get all active deals except those created by the specified user
+        // Get all deals, including user's name
         const result = await client.query(
-            'SELECT d.* FROM Deals d LEFT JOIN Users u ON d.User_ID = u.ID WHERE (u.ID <> $1 OR u.ID IS NULL) AND d.Status = $2',
-            [userId, 'Active']
+            'SELECT d.*, u.Name AS UserName FROM Deals d LEFT JOIN Users u ON d.User_ID = u.ID WHERE (d.Status = $1 OR d.Status = $2 OR d.Status = $3)',
+            ['Active', 'Expired' ,"Inactive",]
         );
 
-        // Send the list of deals as a response
+        // Send the list of deals with user names as a response
         res.json(result.rows);
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
     }
 }
+
+
 
 async function claimDealsHandler(req, res) {
     try {
@@ -248,51 +250,51 @@ async function usersHandler(req, res) {
   
   async function claimedDealsHandler(req, res) {
     try {
-      const { userId, searchUserId } = req.query;
-  
-      // Check if the user making the request is an admin
-      const isAdminQuery = await client.query('SELECT Is_Admin FROM Users WHERE ID = $1', [userId]);
-      const isAdmin = isAdminQuery.rows[0].is_admin;
-  
-      // If the user is not an admin, return a 403 Forbidden response
-      if (!isAdmin) {
-        return res
-          .status(403)
-          .json({ error: 'Access forbidden. Only admin users can retrieve all claimed deals.' });
-      }
-  
-      const pageSize = 10; // Number of records per page
-      const page = req.query.page || 1; // Get the page number from the request
-  
-      // Calculate the offset based on the page number
-      const offset = (page - 1) * pageSize;
-  
-      // Query to get claimed deals for the specified page and search user ID
-      let query = 'SELECT * FROM ClaimedDeals';
-      const params = [];
-  
-      if (searchUserId) {
-        query += ' WHERE User_ID = $1';
-        params.push(searchUserId);
-      }
-  
-      query += ` ORDER BY ID LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
-  
-      const result = await client.query(query, [...params, pageSize, offset]);
-  
-      // Query to get the total number of claimed deals
-      const totalCountQuery = await client.query('SELECT COUNT(*) FROM ClaimedDeals');
-      const totalCount = parseInt(totalCountQuery.rows[0].count);
-      const totalPages = Math.ceil(totalCount / pageSize);
-  
-      // Send the list of claimed deals along with total pages information as a response
-      res.json({ claimedDeals: result.rows, totalPages });
+        const { userId, searchUserId } = req.query;
+
+        // Check if the user making the request is an admin
+        const isAdminQuery = await client.query('SELECT Is_Admin FROM Users WHERE ID = $1', [userId]);
+        const isAdmin = isAdminQuery.rows[0].is_admin;
+
+        let query = 'SELECT * FROM ClaimedDeals';
+        const params = [];
+
+        if (!isAdmin) {
+            // If the user is not an admin, they can only retrieve their own claimed deals
+            query += ' WHERE User_ID = $1';
+            params.push(userId);
+        } else if (searchUserId) {
+            // If the user is an admin and searchUserId is provided, retrieve claimed deals for the specified user
+            query += ' WHERE User_ID = $1';
+            params.push(searchUserId);
+        }
+
+        // Query to get the total number of claimed deals
+        const totalCountQuery = await client.query(query.replace('*', 'COUNT(*)'), params);
+        const totalCount = parseInt(totalCountQuery.rows[0].count);
+
+        // Pagination
+        const pageSize = 10; // Number of records per page
+        const page = req.query.page || 1; // Get the page number from the request
+
+        // Calculate the total number of pages based on the total count and page size
+        const totalPages = Math.ceil(totalCount / pageSize);
+
+        // Calculate the offset based on the page number
+        const offset = (page - 1) * pageSize;
+
+        query += ' ORDER BY ID LIMIT $' + (params.length + 1) + ' OFFSET $' + (params.length + 2);
+
+        const result = await client.query(query, [...params, pageSize, offset]);
+
+        // Send the list of claimed deals along with total pages information as a response
+        res.json({ claimedDeals: result.rows, totalPages });
     } catch (error) {
-      console.error(error);
-      res.status(500).send('Internal Server Error');
+        console.error(error);
+        res.status(500).send('Internal Server Error');
     }
-  }
-  
+}
+
 // Function handler for deleting users by ID
 async function deleteUsersHandler(req, res) {
     try {
@@ -396,7 +398,6 @@ app.post('/add-deal', addNewDeal);
 app.post('/login', loginHandler)
 app.post('/dealStatus', ChangeDealStatusHandler);
 app.get('/deals', getDealsHandler);
-app.post('/dealStatus', ChangeDealStatusHandler);
 app.post('/claimDeal', claimDealsHandler);
 app.get('/users', usersHandler);
 app.get('/deals-admin', dealsHandler);
