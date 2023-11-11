@@ -17,8 +17,8 @@ CREATE TABLE Users (
     Status VARCHAR(50) DEFAULT 'Active',
     Gender VARCHAR(10),
     Date_Of_Birth DATE,
-    Is_Admin BOOLEAN DEFAULT FALSE
-    Photo_Url VARCHAR(255) DEFAULT 'https://cdn-icons-png.flaticon.com/512/3177/3177440.png';
+    Is_Admin BOOLEAN DEFAULT FALSE,
+    Photo_Url VARCHAR(255) DEFAULT 'https://cdn-icons-png.flaticon.com/512/3177/3177440.png'
 );
 
 
