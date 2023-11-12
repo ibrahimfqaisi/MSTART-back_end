@@ -252,8 +252,47 @@ async function dealsHandler(req, res) {
     res.status(500).send('Internal Server Error');
   }
 }
-
 async function claimedDealsHandler(req, res) {
+  try {
+    const { userId, searchUserId } = req.query;
+
+    let query = 'SELECT * FROM ClaimedDeals';
+    const params = [];
+
+    
+      // If the user is not an admin, they can only retrieve their own claimed deals
+      query += ' WHERE User_ID = $1';
+      params.push(userId);
+   
+
+    // Query to get the total number of claimed deals
+    const totalCountQuery = await client.query(query.replace('*', 'COUNT(*)'), params);
+    const totalCount = parseInt(totalCountQuery.rows[0].count);
+
+    // Pagination
+    const pageSize = 10; // Number of records per page
+    const page = req.query.page || 1; // Get the page number from the request
+
+    // Calculate the total number of pages based on the total count and page size
+    const totalPages = Math.ceil(totalCount / pageSize);
+
+    // Calculate the offset based on the page number
+    const offset = (page - 1) * pageSize;
+
+    query += ' ORDER BY ID LIMIT $' + (params.length + 1) + ' OFFSET $' + (params.length + 2);
+
+    const result = await client.query(query, [...params, pageSize, offset]);
+
+    // Send the list of claimed deals along with total pages information as a response
+    res.json({ claimedDeals: result.rows, totalPages });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+}
+
+
+async function claimedDealsHandlerAdmin(req, res) {
   try {
     const { userId, searchUserId } = req.query;
 
@@ -406,7 +445,9 @@ app.get('/deals', getDealsHandler);
 app.post('/claimDeal', claimDealsHandler);
 app.get('/users', usersHandler);
 app.get('/deals-admin', dealsHandler);
+app.get('/claimedDealsAdmin', claimedDealsHandlerAdmin);
 app.get('/claimedDeals', claimedDealsHandler);
+
 app.delete('/users', deleteUsersHandler);
 app.get('/userProfile', getUserProfileHandler);
 app.post('/update-photo-url', updatePhotoUrlHandler);
