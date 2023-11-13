@@ -85,6 +85,56 @@ Start the DealHub API by running the appropriate command. For example:
 ```
 npm start
 ```
+**Important Note:**
 
+For security reasons, it is crucial to create an admin user with the appropriate privileges. The following endpoint allows you to **create an admin user** in the DealHub API.
+
+14. **Create Admin User**
+Endpoint: POST /add-admin-user
+
+Description: Create a new admin user with the provided details.
+
+Request URL example:
+
+```
+http://localhost:3000/add-admin-user
+```
+Request Method: POST
+
+Request Body:
+
+```
+{
+  "name": "ibrahim",
+  "email": "ibrahim@example.com",
+  "phone": "1234567890",
+  "gender": "Male",
+  "dateOfBirth": "1990-01-01",
+  "password": "securepassword",
+  "is_Admin": true
+}
+```
+Response:
+
+```
+{
+  "status": "success",
+  "message": "Admin user created successfully",
+  "user": {
+    "id": "unique_user_id",
+    "name": "ibrahim",
+    "email": "ibrahim@example.com",
+    "phone": "1234567890",
+    "gender": "Male",
+    "dateOfBirth": "1990-01-01",
+    "is_Admin": true
+  }
+}
+```
+Note:
+
+- Ensure the request body includes the necessary information for creating an admin user.
+- The is_Admin field should be set to true to designate the user as an admin.
+- The response will include the created user's details.
 ## Note
 If you choose not to create your own database, you can use the provided deployed database mentioned below.
