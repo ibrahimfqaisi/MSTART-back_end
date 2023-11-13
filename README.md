@@ -7,37 +7,30 @@ Welcome to DealHub API - your go-to solution for managing user accounts, deals, 
 
 ### 1. Add User
 - **Endpoint:** `POST /add-user`
-- **Handler:** `addNewUser`
 - **Description:** Add a new user effortlessly.
 
 ### 2. Add Deal
 - **Endpoint:** `POST /add-deal`
-- **Handler:** `addNewDeal`
 - **Description:** Add a new deal seamlessly.
 
 ### 3. User Login
 - **Endpoint:** `POST /login`
-- **Handler:** `loginHandler`
 - **Description:** Simplified user login endpoint.
 
 ### 4. Change Deal Status
 - **Endpoint:** `POST /dealStatus`
-- **Handler:** `ChangeDealStatusHandler`
 - **Description:** Modify the status of a deal with ease.
 
 ### 5. Get Deals
 - **Endpoint:** `GET /deals`
-- **Handler:** `getDealsHandler`
 - **Description:** Retrieve a list of deals effortlessly.
 
 ### 6. Claim Deal
 - **Endpoint:** `POST /claimDeal`
-- **Handler:** `claimDealsHandler`
 - **Description:** Claim a deal hassle-free.
 
 ### 7. Get Users
 - **Endpoint:** `GET /users`
-- **Handler:** `usersHandler`
 - **Description:** Retrieve a list of users effortlessly.
 
 ### 8. Get Deals for Admin
@@ -47,27 +40,22 @@ Welcome to DealHub API - your go-to solution for managing user accounts, deals, 
 
 ### 9. Get Claimed Deals for Admin
 - **Endpoint:** `GET /claimedDealsAdmin`
-- **Handler:** `claimedDealsHandlerAdmin`
 - **Description:** Retrieve claimed deals tailored for admin use.
 
 ### 10. Get Claimed Deals
 - **Endpoint:** `GET /claimedDeals`
-- **Handler:** `claimedDealsHandler`
 - **Description:** Retrieve claimed deals without a hitch.
 
 ### 11. Delete Users
 - **Endpoint:** `DELETE /users`
-- **Handler:** `deleteUsersHandler`
 - **Description:** Effortlessly delete users.
 
 ### 12. Get User Profile
 - **Endpoint:** `GET /userProfile`
-- **Handler:** `getUserProfileHandler`
 - **Description:** Retrieve user profiles with ease.
 
 ### 13. Update Photo URL
 - **Endpoint:** `POST /update-photo-url`
-- **Handler:** `updatePhotoUrlHandler`
 - **Description:** Update user photo URLs seamlessly.
 
 markdown
