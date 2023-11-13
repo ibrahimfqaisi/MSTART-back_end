@@ -73,13 +73,24 @@ Use your preferred package manager to install the necessary dependencies. For ex
 ```
 npm install
 ```
-3. **Database Setup (Optional):**
+3. **Environment Variables (.env)**
+Before running the DealHub API, make sure to set up your environment variables by creating a .env file in the root directory of the project. Add the following variables and customize them according to your requirements:
+```
+# Set the port for the DealHub API
+PORT=3001
+
+# Database connection string, replace with your own database URL
+DATABASE=postgres://vvujhgiq:Y-FuOH_NLe7dgxcso2gLZg0wFSLSS44f@batyr.db.elephantsql.com/vvujhgiq
+
+```
+
+4. **Database Setup (Optional):**
 If you prefer not to create your own database, you can use the provided deployed database. Set the following environment variable:
 
 ```
 DATABASE=postgres://vvujhgiq:Y-FuOH_NLe7dgxcso2gLZg0wFSLSS44f@batyr.db.elephantsql.com/vvujhgiq
 ```
-4. **Run the Application:**
+5. **Run the Application:**
 Start the DealHub API by running the appropriate command. For example:
 
 ```
