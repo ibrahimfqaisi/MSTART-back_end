@@ -85,7 +85,7 @@ Start the DealHub API by running the appropriate command. For example:
 ```
 npm start
 ```
-#Important Note:
+# Important Note:
 
 For security reasons, it is crucial to create an admin user with the appropriate privileges. The following endpoint allows you to **create an admin user** in the DealHub API.
 
