@@ -1,4 +1,3 @@
-# MSTART-back_end
 # DealHub API
 
 ## Introduction
