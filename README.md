@@ -131,10 +131,8 @@ Response:
   }
 }
 ```
-Note:
+
 
 - Ensure the request body includes the necessary information for creating an admin user.
 - The is_Admin field should be set to true to designate the user as an admin.
 - The response will include the created user's details.
-## Note
-If you choose not to create your own database, you can use the provided deployed database mentioned below.
