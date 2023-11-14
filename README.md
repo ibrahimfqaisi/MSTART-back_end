@@ -108,7 +108,7 @@ Description: Create a new admin user with the provided details.
 Request URL example:
 
 ```
-http://localhost:3000/add-admin-user
+http://localhost:3000/add-user
 ```
 Request Method: POST
 
